@@ -1,0 +1,4 @@
+flask
+tensorflow
+tensorflow_text
+numpy

@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gpu-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gpu-app
+  template:
+    metadata:
+      labels:
+        app: gpu-app
+    spec:
+      containers:
+      - name: gpu-container
+        image: your-image:latest  # Replace with your container image
+        resources:
+          limits:
+            nvidia.com/gpu: 1  # Request 1 GPU
+        env:
+        - name: TF_FORCE_GPU_ALLOW_GROWTH
+          value: "true"  # Optional: Ensures TensorFlow dynamically allocates GPU memory
+        volumeMounts:
+        - mountPath: /tmp
+          name: tmp-storage
+      volumes:
+      - name: tmp-storage
+        emptyDir: {}
+      nodeSelector:
+        kubernetes.io/arch: amd64  # Ensure it's scheduled on the correct architecture
