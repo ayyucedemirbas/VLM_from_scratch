@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Captioning</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Image Captioning</h1>
+            <p>Upload an image 🙂 </p>
+        </header>
+
+        <form method="POST" enctype="multipart/form-data" class="upload-form">
+            <label for="file-upload" class="upload-label">
+                <span>Choose an Image</span>
+                <input type="file" id="file-upload" name="file" accept="image/*" required onchange="previewImage(event)">
+            </label>
+            <button type="submit" class="submit-btn">Generate Caption</button>
+        </form>
+
+        <!-- Preview of the uploaded image -->
+        <div id="image-preview" class="image-frame" style="display: none;">
+            <img id="preview-img" src="#" alt="Uploaded Image Preview">
+        </div>
+
+        <!-- Display the caption and image if available -->
+        {% if caption %}
+            <div class="result">
+                <div class="image-frame">
+                    <img src="{{ url_for('static', filename='uploads/' + image_url.split('/')[-1]) }}" alt="Uploaded Image">
+                </div>
+                <div class="caption-box">
+                    <h2>Generated Caption:</h2>
+                    <p>{{ caption }}</p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        // JavaScript to preview the uploaded image
+        function previewImage(event) {
+            const input = event.target;
+            const previewContainer = document.getElementById('image-preview');
+            const previewImg = document.getElementById('preview-img');
+
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    previewImg.src = e.target.result;
+                    previewContainer.style.display = 'block'; // Show the preview container
+                };
+
+                reader.readAsDataURL(input.files[0]); // Read the image file
+            } else {
+                previewContainer.style.display = 'none'; // Hide the preview container if no file is selected
+            }
+        }
+    </script>
+</body>
+</html>
